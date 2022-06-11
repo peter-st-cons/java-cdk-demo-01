@@ -16,9 +16,9 @@ cdk deploy                                              # deploy the resources t
 
 Have a look at the final output of the deployment. There should be a line like
 ```
-JavaCdk01Stack.JavaCdk01ECSServiceLoadBalancerDNS123ABC = JavaC-XYZ-123456.eu-central-1.elb.amazonaws.com
+JavaCdkDemo01.JavaCdkDemo01ECSServiceLoadBalancerDNS123ABC = JavaC-XYZ-123456.eu-central-1.elb.amazonaws.com
 ```
-Open a browser and go to http://JavaC-XYZ-123456.eu-central-1.elb.amazonaws.com (the string on the right side of `=`).
+Open a browser and go to http://JavaC-XYZ-123456.eu-central-1.elb.amazonaws.com (the string on the right hand side of the `=` sign).
 
 ## Useful commands
 
