@@ -1,18 +1,30 @@
-# Welcome to your CDK Java project!
+# CDK Java demo project
 
-This is a blank project for Java development with CDK.
+## How to run this
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+```bash
+# Set your AWS account data and credentials (or use --profile <profile name> later in the cdk calls):
+export AWS_ACCOUNT_ID="123456789012"
+export AWS_ACCESS_KEY_ID="xxxxxxxxx"
+export AWS_SECRET_ACCESS_KEY="yyyyy"
 
-It is a [Maven](https://maven.apache.org/) based project, so you can open this project with any Maven compatible Java IDE to build and run tests.
+mvn package                                             # compile and run tests
+cdk bootstrap aws://${AWS_ACCOUNT_ID}/eu-central-1      # necessary only once
+cdk synth                                               # check if the code is understood by the CDK
+cdk deploy                                              # deploy the resources to your AWS account
+```
+
+Have a look at the final output of the deployment. There should be a line like
+```
+JavaCdk01Stack.JavaCdk01ECSServiceLoadBalancerDNS123ABC = JavaC-XYZ-123456.eu-central-1.elb.amazonaws.com
+```
+Open a browser and go to http://JavaC-XYZ-123456.eu-central-1.elb.amazonaws.com (the string on the right side of `=`).
 
 ## Useful commands
 
- * `mvn package`     compile and run tests
- * `cdk ls`          list all stacks in the app
- * `cdk synth`       emits the synthesized CloudFormation template
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk docs`        open CDK documentation
-
-Enjoy!
+ * `cdk ls` list all stacks in the app
+ * `cdk synth` emit the synthesized CloudFormation template
+ * `cdk deploy` deploy this stack to your default AWS account/region
+ * `cdk diff` compare deployed stack with current state
+ * `cdk docs` open CDK documentation
+ * `cdk destroy` destroy the stack when finished
