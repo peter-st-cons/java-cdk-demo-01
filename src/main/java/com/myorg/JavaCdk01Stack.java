@@ -34,7 +34,7 @@ public class JavaCdk01Stack extends Stack {
 
     // This will create a VPC with a NAT-gateway, IGW, default routes and route
     // tables, and a private and public subnet in all availability zones
-    Vpc vpc = new Vpc(this, "JavaCdk01-Vpc");
+    Vpc vpc = new Vpc(this, this.getStackName() + "-Vpc");
 
     // Create the ECS cluster
     Cluster cluster = Cluster.Builder.create(this, "JavaCdk01-ECS-Cluster").vpc(vpc).build();
@@ -52,8 +52,9 @@ public class JavaCdk01Stack extends Stack {
             // Dockerfile is located in the `app` directory
             // This will create an ECR repository and upload the docker image to that
             // repository
-            .image(ContainerImage.fromAsset("../app"))
-            // .containerPort(8080)// The default is port 80, The Spring boot default port is 8080
+            .image(ContainerImage.fromAsset("./app"))
+            // .containerPort(8080)// The default is port 80, The Spring boot default port
+            // is 8080
             .build())
         .publicLoadBalancer(true) // Default is false
         .assignPublicIp(false) // If set to true, it will associate the service to a public subnet
