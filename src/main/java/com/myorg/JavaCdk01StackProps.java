@@ -1,5 +1,3 @@
-// Inspired by: https://github.com/stephane-devops/pingMeCdkTransitGatewayWGraph/blob/master/src/main/java/com/stephanecharron/stackProps/VpcStackProps.java
-
 package com.myorg;
 
 import lombok.AllArgsConstructor;
