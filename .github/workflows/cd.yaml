@@ -73,6 +73,6 @@ jobs:
           role-session-name: github
           aws-region: ${{ env.AWS_REGION }}
       - name: Deploy stack
-        run: npx cdk deploy --require-approval never
+        run: npx cdk deploy JavaCdkDemo01 --require-approval never
         env:
           DOCKER_IMAGE: ${{ steps.meta.outputs.tags }}

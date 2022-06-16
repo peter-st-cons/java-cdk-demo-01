@@ -24,6 +24,16 @@ public class JavaCdk01App {
         .props(javaCdk01StackProps)
         .build();
 
+    JavaCdk01BaselineStackProps javaCdk01BaselineStackProps = JavaCdk01BaselineStackProps.builder()
+        .environment(environment)
+        .build();
+
+    JavaCdk01BaselineStack.builder()
+        .scope(app)
+        .id("JavaCdk01Baseline")
+        .props(javaCdk01BaselineStackProps)
+        .build();
+
     app.synth();
   }
 }
