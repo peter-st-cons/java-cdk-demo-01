@@ -28,3 +28,7 @@ Open a browser and go to http://JavaC-XYZ-123456.eu-central-1.elb.amazonaws.com 
  * `cdk diff` compare deployed stack with current state
  * `cdk docs` open CDK documentation
  * `cdk destroy` destroy the stack when finished
+
+## Credits
+
+* Java stack props and builder pattern: https://github.com/stephane-devops/pingMeCdkTransitGatewayWGraph
