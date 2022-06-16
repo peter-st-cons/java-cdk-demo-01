@@ -5,12 +5,15 @@ import software.amazon.awscdk.services.ec2.Vpc;
 import software.amazon.awscdk.services.ecs.Cluster;
 import software.amazon.awscdk.services.ecs.ContainerImage;
 import software.amazon.awscdk.services.ecs.CpuUtilizationScalingProps;
+import software.amazon.awscdk.services.ecs.RepositoryImageProps;
 import software.amazon.awscdk.services.ecs.patterns.ApplicationLoadBalancedFargateService;
 import software.amazon.awscdk.services.ecs.patterns.ApplicationLoadBalancedTaskImageOptions;
 import software.amazon.awscdk.services.ecs.ScalableTaskCount;
 import software.amazon.awscdk.services.elasticloadbalancingv2.HealthCheck;
+import software.amazon.awscdk.services.secretsmanager.ISecret;
+import software.amazon.awscdk.services.secretsmanager.Secret;
+import software.amazon.awscdk.services.secretsmanager.SecretAttributes;
 import software.amazon.awscdk.Stack;
-import software.amazon.awscdk.StackProps;
 import software.constructs.Construct;
 
 public class JavaCdk01Stack extends Stack {
@@ -18,8 +21,11 @@ public class JavaCdk01Stack extends Stack {
     this(scope, id, null);
   }
 
-  public JavaCdk01Stack(final Construct scope, final String id, final StackProps props) {
+  @lombok.Builder
+  public JavaCdk01Stack(final Construct scope, final String id, final JavaCdk01StackProps props) {
     super(scope, id, props);
+
+    String dockerImage = props.getDockerImage();
 
     // Create a VPC with a NAT-gateway, IGW, default routes and route tables, and a
     // private and public subnet in all availability zones.
@@ -28,6 +34,23 @@ public class JavaCdk01Stack extends Stack {
     // Create the ECS cluster.
     Cluster cluster = Cluster.Builder.create(this, this.getStackName() + "-ECS-Cluster").vpc(vpc).build();
 
+    String gitHubContainerRegistrySecretPartialArn = "arn:aws:secretsmanager:" + this.getRegion()
+        + ":" + this.getAccount() + ":secret:javademo/github-container-registry-token";
+
+    // GitHub PAT to fetch docker images from container registry
+    ISecret gitHubContainerRegistryCredentials = Secret.fromSecretAttributes(this,
+        this.getStackName() + "-GitHubToken",
+        SecretAttributes.builder()
+            .secretPartialArn(gitHubContainerRegistrySecretPartialArn)
+            .build());
+
+    // Docker image hosted on ECR or pulled from GitHub container registry
+    ContainerImage repositoryImage = dockerImage == null || dockerImage.isEmpty()
+        ? ContainerImage.fromAsset("./app")
+        : ContainerImage.fromRegistry(dockerImage, RepositoryImageProps.builder()
+            .credentials(gitHubContainerRegistryCredentials)
+            .build());
+
     // Create a load-balanced Fargate service and make it public.
     ApplicationLoadBalancedFargateService fargateService = ApplicationLoadBalancedFargateService.Builder
         .create(this, this.getStackName() + "-ECS-Service")
@@ -35,11 +58,10 @@ public class JavaCdk01Stack extends Stack {
         .cpu(256) // this is the default; for a Spring boot app, 1024 is the minimum
         .desiredCount(1) // actually, the default is already 1
         .taskImageOptions(ApplicationLoadBalancedTaskImageOptions.builder()
-            .image(ContainerImage.fromAsset("./app"))
-            // .containerPort(8080) // in case you use Spring boot default port 8080
+            .image(repositoryImage)
             .build())
         .publicLoadBalancer(true) // Default is false
-        .assignPublicIp(false) // If set to true, it will associate the service to a public subnet
+        .assignPublicIp(true)
         .build();
 
     // Configure health check.
