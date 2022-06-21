@@ -8,6 +8,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   AWS_REGION: eu-central-1
+  WEB_IDENTITY_GITHUB_SUB: ${{ secrets.WEB_IDENTITY_GITHUB_SUB }}
 
 jobs:
   build-and-push-image:

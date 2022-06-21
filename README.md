@@ -29,6 +29,10 @@ Open a browser and go to http://JavaC-XYZ-123456.eu-central-1.elb.amazonaws.com 
  * `cdk docs` open CDK documentation
  * `cdk destroy` destroy the stack when finished
 
+## Deployment
+
+GitHub Actions takes care of deploying the docker image and CloudFormation stacks. We need to deploy the baseline stack first and configure some 
+
 ## Credits
 
 * Java stack props and builder pattern: https://github.com/stephane-devops/pingMeCdkTransitGatewayWGraph
