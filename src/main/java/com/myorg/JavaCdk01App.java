@@ -24,8 +24,11 @@ public class JavaCdk01App {
         .props(javaCdk01StackProps)
         .build();
 
+    String sub = System.getenv("WEB_IDENTITY_GITHUB_SUB");
+
     JavaCdk01BaselineStackProps javaCdk01BaselineStackProps = JavaCdk01BaselineStackProps.builder()
         .environment(environment)
+        .sub(sub)
         .build();
 
     JavaCdk01BaselineStack.builder()

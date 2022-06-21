@@ -13,6 +13,7 @@ import software.amazon.awscdk.StackProps;
 @Setter
 @Builder
 public class JavaCdk01BaselineStackProps implements StackProps {
+  private String sub;
   private Environment environment;
 
   @Override

@@ -18,14 +18,13 @@ public class JavaCdk01BaselineStack extends Stack {
     this(scope, id, null);
   }
 
-  String issuerUrl = "https://token.actions.githubusercontent.com";
-  String sub = "repo:HenrikFricke/java-cdk-demo-01:ref:refs/heads/main";
-  List<String> audiences = Arrays.asList("sts.amazonaws.com");
-  List<IManagedPolicy> policies = Arrays.asList(ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess"));
-
   @lombok.Builder
   public JavaCdk01BaselineStack(final Construct scope, final String id, final JavaCdk01BaselineStackProps props) {
     super(scope, id, props);
+
+    String issuerUrl = "https://token.actions.githubusercontent.com";
+    List<String> audiences = Arrays.asList("sts.amazonaws.com");
+    List<IManagedPolicy> policies = Arrays.asList(ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess"));
 
     OpenIdConnectProvider githubProvider = OpenIdConnectProvider.Builder.create(this, "GitHubProvider")
         .url(issuerUrl)
@@ -39,7 +38,7 @@ public class JavaCdk01BaselineStack extends Stack {
                 Map.of(
                     "StringEquals", Map.of(
                         "token.actions.githubusercontent.com:aud", audiences.get(0),
-                        "token.actions.githubusercontent.com:sub", sub))))
+                        "token.actions.githubusercontent.com:sub", props.getSub()))))
         .managedPolicies(policies)
         .build();
   }
