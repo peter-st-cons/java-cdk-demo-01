@@ -72,7 +72,11 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           role-session-name: github
           aws-region: ${{ env.AWS_REGION }}
-      - name: Deploy stack
+      - name: Deploy baseline stack
+        run: npx cdk deploy JavaCdk01Baseline --require-approval never
+        env:
+          DOCKER_IMAGE: ${{ steps.meta.outputs.tags }}
+      - name: Deploy app stack
         run: npx cdk deploy JavaCdkDemo01 --require-approval never
         env:
           DOCKER_IMAGE: ${{ steps.meta.outputs.tags }}
