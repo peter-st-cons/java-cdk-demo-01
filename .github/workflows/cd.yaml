@@ -66,14 +66,6 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      - name: Synth CDK
-        run: npx cdk synth
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: cdk.out
-          path: |
-            cdk.out
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
