@@ -29,6 +29,29 @@ Open a browser and go to http://JavaC-XYZ-123456.eu-central-1.elb.amazonaws.com 
  * `cdk docs` open CDK documentation
  * `cdk destroy` destroy the stack when finished
 
+## Deployment
+
+GitHub Actions takes care of deploying the Docker image and CloudFormation stacks. Before we can use the workflow, we need to install the baseline stack once. The baseline stack ensures GitHub can deploy infrastructure to AWS.
+
+Run the following command. Make sure you have AWS credentials in place for the desired AWS account.
+
+```sh
+# Replace the GitHub org and repo name to match your setup
+WEB_IDENTITY_GITHUB_SUB="repo:HenrikFricke/java-cdk-demo-01:ref:refs/heads/main" \
+  npx cdk deploy JavaCdk01Baseline --require-approval never
+```
+
+The environment variable `WEB_IDENTITY_GITHUB_SUB` ensures only GitHub Actions triggered in the GitHub org and repo can fetch AWS credentials. Try to be as specific as possible.
+
+After deployment, go to the AWS management console, go to IAM, and search for the role `GitHubActionsRole`. Copy the full ARN. Go back to GitHub and add the following actions secrets to the repo:
+
+```
+AWS_ROLE_TO_ASSUME=$ROLE_ARN_FROM_THE_CONSOLE
+WEB_IDENTITY_GITHUB_SUB=$THE_VALUE_WE_USED_EARLIER
+```
+
+That's it. Now we can use GitHub to deploy the project.
+
 ## Credits
 
 * Java stack props and builder pattern: https://github.com/stephane-devops/pingMeCdkTransitGatewayWGraph
